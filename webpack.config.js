@@ -14,17 +14,15 @@ module.exports = (env, options) => {
       favicon: path.resolve(__dirname, './src/images/favicon.ico'),
     }),
   ];
-
   if (!isDevMode) plugins.push(new MiniCssExtractPlugin());
   if (isDevMode) plugins.push(new ReactRefreshWebpackPlugin());
 
   const babelPresets = ['@babel/preset-react'];
-
   if (!isDevMode) babelPresets.unshift('@babel/preset-env');
 
   return {
     mode: isDevMode ? 'development' : 'production',
-    entry: path.resolve(__dirname, './src/index.jsx'),
+    entry: ['regenerator-runtime/runtime.js', path.resolve(__dirname, './src/index.jsx')],
     output: {
       path: path.resolve(__dirname, './dist'),
       filename: 'bundle.js',
