@@ -1,0 +1,10 @@
+@tailwind base;
+
+@layer base {
+  * {
+    @apply scroll-smooth;
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
