@@ -1,4 +1,6 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
@@ -6,7 +8,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 module.exports = (env, options) => {
   const isDevMode = options.mode !== 'production';
 
-  const plugins = [
+  let plugins = [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
       filename: 'index.html',
@@ -14,8 +16,17 @@ module.exports = (env, options) => {
       favicon: path.resolve(__dirname, './src/images/favicon.ico'),
     }),
   ];
-  if (!isDevMode) plugins.push(new MiniCssExtractPlugin());
   if (isDevMode) plugins.push(new ReactRefreshWebpackPlugin());
+  if (!isDevMode) {
+    plugins = [
+      ...plugins,
+      new MiniCssExtractPlugin(),
+      new CopyWebpackPlugin({
+        patterns: [{ from: 'public' }],
+      }),
+      new CleanWebpackPlugin(),
+    ];
+  }
 
   const babelPresets = ['@babel/preset-react'];
   if (!isDevMode) babelPresets.unshift('@babel/preset-env');
